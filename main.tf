@@ -88,46 +88,9 @@ resource "azurerm_role_assignment" "acr_pull_role" {
 
 module "k8s" {
   source                = "./modules/k8s/"
-  host                  = "${module.k8s.host}"
-  client_certificate    = "${base64decode(module.k8s.client_certificate)}"
-  client_key            = "${base64decode(module.k8s.client_key)}"
-  cluster_ca_certificate= "${base64decode(module.k8s.cluster_ca_certificate)}"
+  host                  = "${module.aks.host}"
+  client_certificate    = "${base64decode(module.aks.client_certificate)}"
+  client_key            = "${base64decode(module.aks.client_key)}"
+  cluster_ca_certificate= "${base64decode(module.aks.cluster_ca_certificate)}"
  
- depends_on = [
-    module.aks
-  ]
 }
-
-
-# resource "azurerm_kubernetes_cluster" "newlook" {
-#   name                = "newlook-aks1"
-#   location            = azurerm_resource_group.newlook.location
-#   resource_group_name = azurerm_resource_group.newlook.name
-#   dns_prefix          = "newlookaks1"
-#   sku_tier            = "Free"
-
-#   default_node_pool {
-#     name       = "default"
-#     node_count = 1
-#     vm_size    = "Standard_D2_v2"
-#   }
-
-#   identity {
-#     type = "SystemAssigned"
-#   }
-
-#   tags = {
-#     Environment = "Dev"
-#   }
-# }
-
-# output "client_certificate" {
-#   value     = azurerm_kubernetes_cluster.newlook.kube_config.0.client_certificate
-#   sensitive = true
-# }
-
-# output "kube_config" {
-#   value = azurerm_kubernetes_cluster.newlook.kube_config_raw
-
-#   sensitive = true
-# }
